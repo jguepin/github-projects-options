@@ -1,0 +1,21 @@
+{
+  "name": "GitHub Projects Options",
+  "version": "0.0.1",
+  "description": "Add options to GitHub Projects",
+  "manifest_version": 2,
+  "permissions": [
+    "https://github.com/*"
+  ],
+  "content_scripts": [
+    {
+      "run_at": "document_start",
+      "matches": [
+        "https://github.com/*"
+      ],
+      "js": [
+        "vendor/jquery-3.1.1.slim.min.js",
+        "content.js"
+      ]
+    }
+  ]
+}
