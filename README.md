@@ -5,8 +5,10 @@ Chrome extension adding options to GitHub Projects:
 
 ### TODO
 - Hide notes / issues / PR
+- Hide cards not assigned to myself / to a user
 - Go fullscreen by default
 - Save those options in localStorage
+- Group cards together
 
 ## Install
 
