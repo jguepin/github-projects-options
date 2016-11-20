@@ -29,6 +29,9 @@ function addProjectsOptionsPane() {
 
         <h4 class="py-2">Hide labels</h4>
         <ul class="contains-task-list" id="jgh-projects-options-labelist"></ul>
+
+        <h4 class="py-2">Hide by assignee</h4>
+        <ul class="contains-task-list" id="jgh-projects-options-assigneelist"></ul>
       </div>
     </div>
   `);
@@ -74,6 +77,16 @@ function getLabelsList() {
   return labels;
 }
 
+function getAssigneesList() {
+  const assignees = {};
+  const assigneesEls = $('img.avatar');
+  assigneesEls.each((index, assignee) => {
+    assignees[assignee.alt.substring(1)] = assignee.src;
+  });
+
+  return assignees;
+}
+
 function openPane() {
   // Hide repositories
   const repositories = getRepositoriesList();
@@ -105,6 +118,22 @@ function openPane() {
   });
   $('#jgh-projects-options-labelist').html(labelsCheckboxes);
   $('.jgh-projects-options-toggle-label').on('click', toggleLabelEvent);
+
+  const assignees = getAssigneesList();
+  let assigneesCheckboxes = '';
+  $.each(assignees, (assignee, url) => {
+    assigneesCheckboxes += `
+      <li>
+        <label class="text-normal">
+          <input type="checkbox" id="${assignee}" class="jgh-projects-options-toggle-assignee">
+          <img src="${url}" class="avatar" height="20" width="20" alt="@${assignee}">
+          <span class="pl-1">${assignee}</span>
+        </label>
+      </li>
+    `;
+  });
+  $('#jgh-projects-options-assigneelist').html(assigneesCheckboxes);
+  $('.jgh-projects-options-toggle-assignee').on('click', toggleAssigneeEvent);
 }
 
 function toggleRepositoryEvent(e) {
@@ -133,6 +162,23 @@ function toggleLabelEvent(e) {
   cards.each((index, card) => {
     const cardLabels = $(card).find('.issue-card-label');
     if (cardLabels.length && cardLabels[0].innerText === label) {
+      if (checked) {
+        $(card).hide();
+      } else {
+        $(card).show();
+      }
+    }
+  });
+}
+
+function toggleAssigneeEvent(e) {
+  const assignee = e.target.id;
+  const checked = e.target.checked;
+
+  const cards = $('.issue-card');
+  cards.each((index, card) => {
+    const cardAssignees = $(card).find('img.avatar');
+    if (cardAssignees.length && cardAssignees[0].alt === `@${assignee}`) {
       if (checked) {
         $(card).hide();
       } else {

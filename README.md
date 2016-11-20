@@ -1,14 +1,15 @@
 # GitHub Projects Options
 
 Chrome extension adding options to GitHub Projects:
-- Hide some repositories cards in an Organization Project
+- Hide cards by repository / label / assignee
 
 ### TODO
 - Hide notes / issues / PR
-- Hide cards not assigned to myself / to a user
 - Go fullscreen by default
 - Save those options in localStorage
 - Group cards together
+- Better UI
+- Search cards
 
 ## Install
 
