@@ -24,8 +24,11 @@ function addProjectsOptionsPane() {
         <h4 class="f5 text-center">Project options</h4>
       </div>
       <div class="mx-4 my-4 pb-4 overflow-hidden">
-        <h5>Hide repositories</h5>
+        <h4 class="pb-2">Hide repositories</h4>
         <ul class="contains-task-list" id="jgh-projects-options-repolist"></ul>
+
+        <h4 class="py-2">Hide labels</h4>
+        <ul class="contains-task-list" id="jgh-projects-options-labelist"></ul>
       </div>
     </div>
   `);
@@ -61,10 +64,21 @@ function getRepositoriesList() {
   return repositories;
 }
 
+function getLabelsList() {
+  const labels = {};
+  const labelEls = $('.issue-card-label');
+  labelEls.each((index, label) => {
+    labels[label.innerText] = label.style.cssText;
+  });
+
+  return labels;
+}
+
 function openPane() {
+  // Hide repositories
   const repositories = getRepositoriesList();
   let repositoriesCheckboxes = '';
-  repositories.forEach(repo => {
+  repositories.forEach((repo) => {
     repositoriesCheckboxes += `
       <li>
         <label class="text-normal">
@@ -73,10 +87,24 @@ function openPane() {
       </li>
     `;
   });
-
   $('#jgh-projects-options-repolist').html(repositoriesCheckboxes);
-
   $('.jgh-projects-options-toggle-repo').on('click', toggleRepositoryEvent);
+
+  // Hide labels
+  const labels = getLabelsList();
+  let labelsCheckboxes = '';
+  $.each(labels, (label, style) => {
+    labelsCheckboxes += `
+      <li>
+        <label>
+          <input type="checkbox" id="${label}" class="jgh-projects-options-toggle-label">
+          <span style="${style}" class="label">${label}</span>
+        </label>
+      </li>
+    `;
+  });
+  $('#jgh-projects-options-labelist').html(labelsCheckboxes);
+  $('.jgh-projects-options-toggle-label').on('click', toggleLabelEvent);
 }
 
 function toggleRepositoryEvent(e) {
@@ -88,6 +116,23 @@ function toggleRepositoryEvent(e) {
   cards.each((index, card) => {
     const cardDesc = $(card).find('small')[0];
     if (cardDesc.innerText.match(repoPattern)) {
+      if (checked) {
+        $(card).hide();
+      } else {
+        $(card).show();
+      }
+    }
+  });
+}
+
+function toggleLabelEvent(e) {
+  const label = e.target.id;
+  const checked = e.target.checked;
+
+  const cards = $('.issue-card');
+  cards.each((index, card) => {
+    const cardLabels = $(card).find('.issue-card-label');
+    if (cardLabels.length && cardLabels[0].innerText === label) {
       if (checked) {
         $(card).hide();
       } else {
