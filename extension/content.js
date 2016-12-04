@@ -13,6 +13,7 @@ function addProjectsOptionsPane() {
 
 function addButtonsEventListeners() {
   $('button.jgh-projects-options-toggle').on('click', toggleProjectOptionsPane);
+  $('#tgh-projects-assigns-button').on('click', updateAssignsList);
 }
 
 function toggleProjectOptionsPane() {
@@ -24,6 +25,19 @@ function toggleProjectOptionsPane() {
   } else {
     pane.addClass('d-none');
   }
+}
+
+function addAssignsFilter() {
+  const headerButtons = $('div.project-header > div.d-table.mt-1.float-right.f6');
+
+  headerButtons.prepend(Handlebars.templates['assigns-filter']());
+}
+
+function updateAssignsList() {
+  const assignsList = $('#tgh-projects-assigns-list');
+  const assignees = getAssigneesList();
+
+  assignsList.html(Handlebars.templates['assigns-list']({ assignees }));
 }
 
 function getRepositoriesList() {
@@ -134,6 +148,7 @@ function toggleAssigneeEvent(e) {
 
 $(document).ready(() => {
   addHeaderOptionsIcon();
+  addAssignsFilter();
   addProjectsOptionsPane();
   addButtonsEventListeners();
 });
