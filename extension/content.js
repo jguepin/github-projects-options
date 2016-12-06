@@ -1,3 +1,5 @@
+let selectedAssignee = '';
+
 function addHeaderOptionsIcon() {
   const headerButtons = $('div.project-header > div.d-table.mt-1.float-right.f6');
   headerButtons.prepend(Handlebars.templates['header-options-icon']());
@@ -36,8 +38,35 @@ function addAssignsFilter() {
 function updateAssignsList() {
   const assignsList = $('#tgh-projects-assigns-list');
   const assignees = getAssigneesList();
+  const template = Handlebars.templates['assigns-list'];
 
-  assignsList.html(Handlebars.templates['assigns-list']({ assignees }));
+  assignsList.html(template({ assignees }));
+  $('.tgh-projects-assigns-toggle').on('click', toggleAssignee);
+}
+
+function toggleAssignee(e) {
+  const assignee = e ? $(e.currentTarget).find('.select-menu-item-text').text().trim() : '';
+  const cards = $('.issue-card');
+
+  if (selectedAssignee === assignee) {
+    selectedAssignee = '';
+  } else if (selectedAssignee !== assignee) {
+    selectedAssignee = assignee
+  }
+
+  cards.each((index, card) => {
+    if (!selectedAssignee) {
+      $(card).show();
+    } else {
+      const cardAssignees = $(card).find('img.avatar');
+
+      if (cardAssignees.length && cardAssignees[0].alt === `@${assignee}`) {
+        $(card).show();
+      } else {
+        $(card).hide();
+      }
+    }
+  });
 }
 
 function getRepositoriesList() {
@@ -66,13 +95,18 @@ function getLabelsList() {
 }
 
 function getAssigneesList() {
-  const assignees = {};
+  const assignees = [];
   const assigneesEls = $('img.avatar');
+
   assigneesEls.each((index, assignee) => {
-    assignees[assignee.alt.substring(1)] = assignee.src;
+    const username = assignee.alt.substring(1);
+    const avatar = assignee.src;
+    const isSelected = selectedAssignee === username;
+
+    assignees.push({ username, avatar, isSelected });
   });
 
-  return assignees;
+  return _.sortBy(_.uniqBy(assignees, x => x.username), x => x.username.toLowerCase());
 }
 
 function openPane() {
