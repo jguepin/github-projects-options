@@ -15,6 +15,7 @@
       "js": [
         "vendor/jquery-3.1.1.slim.min.js",
         "vendor/handlebars.runtime.min-4.0.5.js",
+        "vendor/lodash.min-1.8.3.js",
         "templates.js",
         "content.js"
       ]
