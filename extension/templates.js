@@ -12,9 +12,11 @@ templates['assigns-list'] = template({"1":function(container,depth0,helpers,part
     + alias4(((helper = (helper = helpers.username || (depth0 != null ? depth0.username : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"username","hash":{},"data":data}) : helper)))
     + "\" height=\"30\" src=\""
     + alias4(((helper = (helper = helpers.avatar || (depth0 != null ? depth0.avatar : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"avatar","hash":{},"data":data}) : helper)))
-    + "\" width=\"30\"></div>\n      <div class=\"select-menu-item-text\">\n        "
+    + "\" width=\"30\"></div>\n      <div class=\"select-menu-item-text\" style=\"display: inline-block;\">"
     + alias4(((helper = (helper = helpers.username || (depth0 != null ? depth0.username : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"username","hash":{},"data":data}) : helper)))
-    + "\n      </div>\n    </a>\n  </span>\n";
+    + "</div>\n      <div style=\"display: inline-block;\">("
+    + alias4(((helper = (helper = helpers.count || (depth0 != null ? depth0.count : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"count","hash":{},"data":data}) : helper)))
+    + ")</div>\n    </a>\n  </span>\n";
 },"2":function(container,depth0,helpers,partials,data) {
     return " selected";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
