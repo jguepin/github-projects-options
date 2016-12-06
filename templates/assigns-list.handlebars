@@ -1,16 +1,13 @@
-<a class="select-menu-item js-navigation-item js-navigation-open navigation-focus">
-  <svg aria-hidden="true" class="octicon octicon-check select-menu-item-icon" height="16" version="1.1" viewBox="0 0 12 16" width="12"><path fill-rule="evenodd" d="M12 5l-8 8-4-4 1.5-1.5L4 10l6.5-6.5z"></path></svg>
-  <div class="select-menu-item-text">
-    <strong>Assigned to nobody</strong>
-  </div>
-</a>
-
-{{#each assignees as |url assignee|}}
-  <a class="select-menu-item js-navigation-item js-navigation-open tgh-projects-assigns-toggle">
-    <svg aria-hidden="true" class="octicon octicon-check select-menu-item-icon" height="16" version="1.1" viewBox="0 0 12 16" width="12"><path fill-rule="evenodd" d="M12 5l-8 8-4-4 1.5-1.5L4 10l6.5-6.5z"></path></svg>
-    <div class="select-menu-item-gravatar"><img alt="@{{assignee}}" height="30" src="{{url}}" width="30"></div>
-    <div class="select-menu-item-text">
-      {{assignee}}
-    </div>
-  </a>
+{{#each assignees}}
+  <span>
+    <a class="select-menu-item js-navigation-item js-navigation-open tgh-projects-assigns-toggle{{#if isSelected}} selected{{/if}}">
+      <svg aria-hidden="true" class="octicon octicon-check select-menu-item-icon" height="16" version="1.1" viewBox="0 0 12 16" width="12">
+        <path fill-rule="evenodd" d="M12 5l-8 8-4-4 1.5-1.5L4 10l6.5-6.5z"></path>
+      </svg>
+      <div class="select-menu-item-gravatar"><img alt="@{{username}}" height="30" src="{{avatar}}" width="30"></div>
+      <div class="select-menu-item-text">
+        {{username}}
+      </div>
+    </a>
+  </span>
 {{/each}}
