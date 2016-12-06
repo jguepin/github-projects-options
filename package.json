@@ -1,0 +1,12 @@
+{
+  "name": "github-projects-options",
+  "description": "Add options to GitHub Projects",
+  "version": "0.0.2",
+  "license": "MIT",
+  "scripts": {
+    "build": "./node_modules/handlebars/bin/handlebars templates > extension/templates.js"
+  },
+  "devDependencies": {
+    "handlebars": "4.0.5"
+  }
+}
