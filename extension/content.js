@@ -14,12 +14,12 @@ function addProjectsOptionsPane() {
 }
 
 function addButtonsEventListeners() {
-  $('button.jgh-projects-options-toggle').on('click', toggleProjectOptionsPane);
-  $('#tgh-projects-assigns-button').on('click', updateAssignsList);
+  $('button.gh-projects-options-toggle').on('click', toggleProjectOptionsPane);
+  $('#gh-projects-options-assignees-button').on('click', updateAssigneesList);
 }
 
 function toggleProjectOptionsPane() {
-  const pane = $('div.project-pane.jgh-projects-options-pane');
+  const pane = $('div.project-pane.gh-projects-options-pane');
   if (pane.hasClass('d-none')) {
     pane.removeClass('d-none');
 
@@ -29,19 +29,19 @@ function toggleProjectOptionsPane() {
   }
 }
 
-function addAssignsFilter() {
+function addAssigneesFilter() {
   const headerButtons = $('div.project-header > div.d-table.mt-1.float-right.f6');
 
-  headerButtons.prepend(Handlebars.templates['assigns-filter']());
+  headerButtons.prepend(Handlebars.templates['assignees-filter']());
 }
 
-function updateAssignsList() {
-  const assignsList = $('#tgh-projects-assigns-list');
+function updateAssigneesList() {
+  const assigneesList = $('#gh-projects-options-assignees-list');
   const assignees = getAssigneesList();
-  const template = Handlebars.templates['assigns-list'];
+  const template = Handlebars.templates['assignees-list'];
 
-  assignsList.html(template({ assignees }));
-  $('.tgh-projects-assigns-toggle').on('click', toggleAssignee);
+  assigneesList.html(template({ assignees }));
+  $('.gh-projects-options-assignees-toggle').on('click', toggleAssignee);
 }
 
 function toggleAssignee(e) {
@@ -117,14 +117,14 @@ function openPane() {
   // Hide repositories
   const repositories = Array.from(getRepositoriesList());
 
-  $('#jgh-projects-options-repolist').html(Handlebars.templates['repositories-checkboxes']({ repositories }));
-  $('.jgh-projects-options-toggle-repo').on('click', toggleRepositoryEvent);
+  $('#gh-projects-options-repolist').html(Handlebars.templates['repositories-checkboxes']({ repositories }));
+  $('.gh-projects-options-toggle-repo').on('click', toggleRepositoryEvent);
 
   // Hide labels
   const labels = getLabelsList();
 
-  $('#jgh-projects-options-labelist').html(Handlebars.templates['labels-checkboxes']({ labels }));
-  $('.jgh-projects-options-toggle-label').on('click', toggleLabelEvent);
+  $('#gh-projects-options-labelist').html(Handlebars.templates['labels-checkboxes']({ labels }));
+  $('.gh-projects-options-toggle-label').on('click', toggleLabelEvent);
 }
 
 function toggleRepositoryEvent(e) {
@@ -164,7 +164,7 @@ function toggleLabelEvent(e) {
 
 $(document).ready(() => {
   addHeaderOptionsIcon();
-  addAssignsFilter();
+  addAssigneesFilter();
   addProjectsOptionsPane();
   addButtonsEventListeners();
 });
