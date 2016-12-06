@@ -95,18 +95,22 @@ function getLabelsList() {
 }
 
 function getAssigneesList() {
-  const assignees = [];
-  const assigneesEls = $('img.avatar');
+  const assignees = {};
+  const assigneesEls = $('.project-columns img.avatar');
 
   assigneesEls.each((index, assignee) => {
     const username = assignee.alt.substring(1);
     const avatar = assignee.src;
     const isSelected = selectedAssignee === username;
 
-    assignees.push({ username, avatar, isSelected });
+    if (assignees[username]) {
+      assignees[username].count += 1;
+    } else {
+      assignees[username] = { avatar, username, isSelected, count: 1 };
+    }
   });
 
-  return _.sortBy(_.uniqBy(assignees, x => x.username), x => x.username.toLowerCase());
+  return Object.keys(assignees).map(x => assignees[x]).sort((a, b) => a.username.toLowerCase() > b.username.toLowerCase());
 }
 
 function openPane() {
