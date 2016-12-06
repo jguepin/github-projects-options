@@ -121,11 +121,6 @@ function openPane() {
 
   $('#jgh-projects-options-labelist').html(Handlebars.templates['labels-checkboxes']({ labels }));
   $('.jgh-projects-options-toggle-label').on('click', toggleLabelEvent);
-
-  const assignees = getAssigneesList();
-
-  $('#jgh-projects-options-assigneelist').html(Handlebars.templates['assignees-checkboxes']({ assignees }));
-  $('.jgh-projects-options-toggle-assignee').on('click', toggleAssigneeEvent);
 }
 
 function toggleRepositoryEvent(e) {
@@ -154,23 +149,6 @@ function toggleLabelEvent(e) {
   cards.each((index, card) => {
     const cardLabels = $(card).find('.issue-card-label');
     if (cardLabels.length && cardLabels[0].innerText === label) {
-      if (checked) {
-        $(card).hide();
-      } else {
-        $(card).show();
-      }
-    }
-  });
-}
-
-function toggleAssigneeEvent(e) {
-  const assignee = e.target.id;
-  const checked = e.target.checked;
-
-  const cards = $('.issue-card');
-  cards.each((index, card) => {
-    const cardAssignees = $(card).find('img.avatar');
-    if (cardAssignees.length && cardAssignees[0].alt === `@${assignee}`) {
       if (checked) {
         $(card).hide();
       } else {
