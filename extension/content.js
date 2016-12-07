@@ -16,6 +16,9 @@ function addProjectsOptionsPane() {
 function addButtonsEventListeners() {
   $('button.gh-projects-options-toggle').on('click', toggleProjectOptionsPane);
   $('#gh-projects-options-assignees-button').on('click', updateAssigneesList);
+  $('#gh-projects-options-add-column-toggle').on('click', toggleAddColumnEvent);
+  $('#gh-projects-options-project-details-toggle').on('click', toggleProjectDetailsEvent);
+  $('#gh-projects-options-project-settings-toggle').on('click', toggleProjectSettingsEvent);
 }
 
 function toggleProjectOptionsPane() {
@@ -160,6 +163,39 @@ function toggleLabelEvent(e) {
       }
     }
   });
+}
+
+function toggleAddColumnEvent(e) {
+  const checked = e.target.checked;
+
+  const addColumnEl = $('.js-new-project-column-container');
+  if (checked) {
+    $(addColumnEl).hide();
+  } else {
+    $(addColumnEl).show();
+  }
+}
+
+function toggleProjectDetailsEvent(e) {
+  const checked = e.target.checked;
+
+  const projectDetailsEl = $('.js-toggle-project-about').parent();
+  if (checked) {
+    $(projectDetailsEl).removeClass('d-table-cell').hide();
+  } else {
+    $(projectDetailsEl).addClass('d-table-cell').show();
+  }
+}
+
+function toggleProjectSettingsEvent(e) {
+  const checked = e.target.checked;
+
+  const settingsEl = $('div.project-header > div.d-table.mt-1.float-right.f6').children().last();
+  if (checked) {
+    $(settingsEl).removeClass('d-table-cell').hide();
+  } else {
+    $(settingsEl).addClass('d-table-cell').show();
+  }
 }
 
 $(document).ready(() => {
