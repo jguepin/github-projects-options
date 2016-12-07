@@ -2,6 +2,7 @@
 
 Chrome extension adding options to GitHub Projects:
 - Hide cards by repository / label / assignee
+- Hide parts of the UI (Details, Settings, Add column)
 
 ### TODO
 - Hide notes / issues / PR
@@ -14,6 +15,10 @@ Chrome extension adding options to GitHub Projects:
 ## Install
 
 Install it from the [Chrome Web Store](https://chrome.google.com/webstore/detail/github-projects-options/pmkiiheepcolpokabbgdkfciocanaifh) or [manually](http://superuser.com/a/247654/6877).
+
+## Screenshot
+
+![](screenshot.png)
 
 ## License
 
