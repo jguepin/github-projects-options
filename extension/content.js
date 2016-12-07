@@ -1,3 +1,5 @@
+let selectedAssignee = '';
+
 function addHeaderOptionsIcon() {
   const headerButtons = $('div.project-header > div.d-table.mt-1.float-right.f6');
   headerButtons.prepend(Handlebars.templates['header-options-icon']());
@@ -12,11 +14,12 @@ function addProjectsOptionsPane() {
 }
 
 function addButtonsEventListeners() {
-  $('button.jgh-projects-options-toggle').on('click', toggleProjectOptionsPane);
+  $('button.gh-projects-options-toggle').on('click', toggleProjectOptionsPane);
+  $('#gh-projects-options-assignees-button').on('click', updateAssigneesList);
 }
 
 function toggleProjectOptionsPane() {
-  const pane = $('div.project-pane.jgh-projects-options-pane');
+  const pane = $('div.project-pane.gh-projects-options-pane');
   if (pane.hasClass('d-none')) {
     pane.removeClass('d-none');
 
@@ -24,6 +27,46 @@ function toggleProjectOptionsPane() {
   } else {
     pane.addClass('d-none');
   }
+}
+
+function addAssigneesFilter() {
+  const headerButtons = $('div.project-header > div.d-table.mt-1.float-right.f6');
+
+  headerButtons.prepend(Handlebars.templates['assignees-filter']());
+}
+
+function updateAssigneesList() {
+  const assigneesList = $('#gh-projects-options-assignees-list');
+  const assignees = getAssigneesList();
+  const template = Handlebars.templates['assignees-list'];
+
+  assigneesList.html(template({ assignees }));
+  $('.gh-projects-options-assignees-toggle').on('click', toggleAssignee);
+}
+
+function toggleAssignee(e) {
+  const assignee = e ? $(e.currentTarget).find('.select-menu-item-text').text().trim() : '';
+  const cards = $('.issue-card');
+
+  if (selectedAssignee === assignee) {
+    selectedAssignee = '';
+  } else if (selectedAssignee !== assignee) {
+    selectedAssignee = assignee
+  }
+
+  cards.each((index, card) => {
+    if (!selectedAssignee) {
+      $(card).show();
+    } else {
+      const cardAssignees = $(card).find('img.avatar');
+
+      if (cardAssignees.length && cardAssignees[0].alt === `@${assignee}`) {
+        $(card).show();
+      } else {
+        $(card).hide();
+      }
+    }
+  });
 }
 
 function getRepositoriesList() {
@@ -53,31 +96,35 @@ function getLabelsList() {
 
 function getAssigneesList() {
   const assignees = {};
-  const assigneesEls = $('img.avatar');
+  const assigneesEls = $('.project-columns img.avatar');
+
   assigneesEls.each((index, assignee) => {
-    assignees[assignee.alt.substring(1)] = assignee.src;
+    const username = assignee.alt.substring(1);
+    const avatar = assignee.src;
+    const isSelected = selectedAssignee === username;
+
+    if (assignees[username]) {
+      assignees[username].count += 1;
+    } else {
+      assignees[username] = { avatar, username, isSelected, count: 1 };
+    }
   });
 
-  return assignees;
+  return Object.keys(assignees).map(x => assignees[x]).sort((a, b) => a.username.toLowerCase() > b.username.toLowerCase());
 }
 
 function openPane() {
   // Hide repositories
   const repositories = Array.from(getRepositoriesList());
 
-  $('#jgh-projects-options-repolist').html(Handlebars.templates['repositories-checkboxes']({ repositories }));
-  $('.jgh-projects-options-toggle-repo').on('click', toggleRepositoryEvent);
+  $('#gh-projects-options-repolist').html(Handlebars.templates['repositories-checkboxes']({ repositories }));
+  $('.gh-projects-options-toggle-repo').on('click', toggleRepositoryEvent);
 
   // Hide labels
   const labels = getLabelsList();
 
-  $('#jgh-projects-options-labelist').html(Handlebars.templates['labels-checkboxes']({ labels }));
-  $('.jgh-projects-options-toggle-label').on('click', toggleLabelEvent);
-
-  const assignees = getAssigneesList();
-
-  $('#jgh-projects-options-assigneelist').html(Handlebars.templates['assignees-checkboxes']({ assignees }));
-  $('.jgh-projects-options-toggle-assignee').on('click', toggleAssigneeEvent);
+  $('#gh-projects-options-labelist').html(Handlebars.templates['labels-checkboxes']({ labels }));
+  $('.gh-projects-options-toggle-label').on('click', toggleLabelEvent);
 }
 
 function toggleRepositoryEvent(e) {
@@ -115,25 +162,9 @@ function toggleLabelEvent(e) {
   });
 }
 
-function toggleAssigneeEvent(e) {
-  const assignee = e.target.id;
-  const checked = e.target.checked;
-
-  const cards = $('.issue-card');
-  cards.each((index, card) => {
-    const cardAssignees = $(card).find('img.avatar');
-    if (cardAssignees.length && cardAssignees[0].alt === `@${assignee}`) {
-      if (checked) {
-        $(card).hide();
-      } else {
-        $(card).show();
-      }
-    }
-  });
-}
-
 $(document).ready(() => {
   addHeaderOptionsIcon();
+  addAssigneesFilter();
   addProjectsOptionsPane();
   addButtonsEventListeners();
 });
