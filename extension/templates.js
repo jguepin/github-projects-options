@@ -6,17 +6,17 @@ templates['assignees-filter'] = template({"compiler":[7,">= 4.0.0"],"main":funct
 templates['assignees-list'] = template({"1":function(container,depth0,helpers,partials,data) {
     var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 
-  return "  <span>\n    <a class=\"select-menu-item js-navigation-item js-navigation-open gh-projects-options-assignees-toggle"
+  return "  <a class=\"select-menu-item js-navigation-item js-navigation-open gh-projects-options-assignees-toggle"
     + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isSelected : depth0),{"name":"if","hash":{},"fn":container.program(2, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "\">\n      <svg aria-hidden=\"true\" class=\"octicon octicon-check select-menu-item-icon\" height=\"16\" version=\"1.1\" viewBox=\"0 0 12 16\" width=\"12\">\n        <path fill-rule=\"evenodd\" d=\"M12 5l-8 8-4-4 1.5-1.5L4 10l6.5-6.5z\"></path>\n      </svg>\n      <div class=\"select-menu-item-gravatar\"><img alt=\"@"
+    + "\">\n    <svg aria-hidden=\"true\" class=\"octicon octicon-check select-menu-item-icon\" height=\"16\" version=\"1.1\" viewBox=\"0 0 12 16\" width=\"12\">\n      <path fill-rule=\"evenodd\" d=\"M12 5l-8 8-4-4 1.5-1.5L4 10l6.5-6.5z\"></path>\n    </svg>\n    <div class=\"select-menu-item-gravatar\"><img alt=\"@"
     + alias4(((helper = (helper = helpers.username || (depth0 != null ? depth0.username : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"username","hash":{},"data":data}) : helper)))
     + "\" height=\"30\" src=\""
     + alias4(((helper = (helper = helpers.avatar || (depth0 != null ? depth0.avatar : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"avatar","hash":{},"data":data}) : helper)))
-    + "\" width=\"30\"></div>\n      <div class=\"select-menu-item-text\" style=\"display: inline-block;\">"
+    + "\" width=\"30\"></div>\n    <div class=\"select-menu-item-text\" style=\"display: inline-block;\">"
     + alias4(((helper = (helper = helpers.username || (depth0 != null ? depth0.username : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"username","hash":{},"data":data}) : helper)))
-    + "</div>\n      <div style=\"display: inline-block;\">("
+    + "</div>\n    <div style=\"display: inline-block; font-size: 10px;\">("
     + alias4(((helper = (helper = helpers.count || (depth0 != null ? depth0.count : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"count","hash":{},"data":data}) : helper)))
-    + ")</div>\n    </a>\n  </span>\n";
+    + ")</div>\n  </a>\n";
 },"2":function(container,depth0,helpers,partials,data) {
     return " selected";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
