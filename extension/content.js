@@ -44,11 +44,11 @@ function updateAssigneesList() {
   const template = Handlebars.templates['assignees-list'];
 
   assigneesList.html(template({ assignees }));
-  $('.gh-projects-options-assignees-toggle').on('click', toggleAssignee);
+  $('.gh-projects-options-assignees-toggle').on('click', toggleAssigneeEvent);
 }
 
-function toggleAssignee(e) {
-  const assignee = $(e.currentTarget).find('.select-menu-item-text').text().trim();
+function toggleAssigneeEvent(e) {
+  const assignee = e.target.id;
   const cards = $('.issue-card');
   const index = selectedAssignees.indexOf(assignee);
 
@@ -63,8 +63,10 @@ function toggleAssignee(e) {
       $(card).show();
     } else {
       const cardAssignees = $(card).find('img.avatar');
+      // FIXME: support multiple assignees
+      let firstAssignee = cardAssignees.length ? cardAssignees[0].alt.replace('@', '') : '#nobody';
 
-      if (cardAssignees.length && selectedAssignees.includes(cardAssignees[0].alt.replace('@', ''))) {
+      if (selectedAssignees.includes(firstAssignee)) {
         $(card).show();
       } else {
         $(card).hide();
@@ -116,6 +118,14 @@ function getAssigneesList() {
       assignees[username] = { avatar, username, isSelected, count: 1 };
     }
   });
+
+  // Add the fake assignee "nobody"
+  const nobodyUsername = '#nobody';
+  assignees[nobodyUsername] = {
+    username: nobodyUsername,
+    isSelected: selectedAssignees.includes(nobodyUsername),
+    isNobody: true
+  };
 
   return Object.keys(assignees).map(x => assignees[x]).sort((a, b) => a.username.toLowerCase() > b.username.toLowerCase());
 }
