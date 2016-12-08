@@ -22,6 +22,6 @@ Install it from the [Chrome Web Store](https://chrome.google.com/webstore/detail
 
 ## License
 
-[MIT License](LICENSE.md) © [Julien Guepin](http://guep.in)
+[MIT License](LICENSE.md) © [Julien Guepin](http://guep.in) & [Thomas Mosmant](https://github.com/tmosmant)
 
 Inspired by [Refined GitHub](https://github.com/sindresorhus/refined-github)
