@@ -1,4 +1,4 @@
-let selectedAssignee = '';
+let selectedAssignees = [];
 
 function addHeaderOptionsIcon() {
   const headerButtons = $('div.project-header > div.d-table.mt-1.float-right.f6');
@@ -48,28 +48,32 @@ function updateAssigneesList() {
 }
 
 function toggleAssignee(e) {
-  const assignee = e ? $(e.currentTarget).find('.select-menu-item-text').text().trim() : '';
+  const assignee = $(e.currentTarget).find('.select-menu-item-text').text().trim();
   const cards = $('.issue-card');
+  const index = selectedAssignees.indexOf(assignee);
 
-  if (selectedAssignee === assignee) {
-    selectedAssignee = '';
-  } else if (selectedAssignee !== assignee) {
-    selectedAssignee = assignee
+  if (index === -1) {
+    selectedAssignees.push(assignee);
+  } else {
+    selectedAssignees.splice(index, 1);
   }
 
   cards.each((index, card) => {
-    if (!selectedAssignee) {
+    if (!selectedAssignees.length) {
       $(card).show();
     } else {
       const cardAssignees = $(card).find('img.avatar');
 
-      if (cardAssignees.length && cardAssignees[0].alt === `@${assignee}`) {
+      if (cardAssignees.length && selectedAssignees.includes(cardAssignees[0].alt.replace('@', ''))) {
         $(card).show();
       } else {
         $(card).hide();
       }
     }
   });
+
+  updateAssigneesList();
+  e.stopPropagation();
 }
 
 function getRepositoriesList() {
@@ -104,7 +108,7 @@ function getAssigneesList() {
   assigneesEls.each((index, assignee) => {
     const username = assignee.alt.substring(1);
     const avatar = assignee.src;
-    const isSelected = selectedAssignee === username;
+    const isSelected = selectedAssignees.includes(username);
 
     if (assignees[username]) {
       assignees[username].count += 1;
