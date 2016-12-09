@@ -64,7 +64,6 @@ function toggleAssigneeEvent(e) {
       $(card).show();
     } else {
       const cardAssignees = $(card).find('img.avatar');
-      // FIXME: support multiple assignees
       let firstAssignee = cardAssignees.length ? cardAssignees[0].alt.replace('@', '') : '#nobody';
 
       if (selectedAssignees.includes(firstAssignee)) {
@@ -92,16 +91,6 @@ function getRepositoriesList() {
   });
 
   return repositories;
-}
-
-function getLabelsList() {
-  const labels = {};
-  const labelEls = $('.issue-card-label');
-  labelEls.each((index, label) => {
-    labels[label.innerText] = label.style.cssText;
-  });
-
-  return labels;
 }
 
 function getAssigneesList() {
@@ -137,12 +126,6 @@ function openPane() {
 
   $('#gh-projects-options-repolist').html(Handlebars.templates['repositories-checkboxes']({ repositories }));
   $('.gh-projects-options-toggle-repo').on('click', toggleRepositoryEvent);
-
-  // Hide labels
-  const labels = getLabelsList();
-
-  $('#gh-projects-options-labelist').html(Handlebars.templates['labels-checkboxes']({ labels }));
-  $('.gh-projects-options-toggle-label').on('click', toggleLabelEvent);
 }
 
 function toggleRepositoryEvent(e) {
@@ -154,23 +137,6 @@ function toggleRepositoryEvent(e) {
   cards.each((index, card) => {
     const cardDesc = $(card).find('small')[0];
     if (cardDesc.innerText.match(repoPattern)) {
-      if (checked) {
-        $(card).hide();
-      } else {
-        $(card).show();
-      }
-    }
-  });
-}
-
-function toggleLabelEvent(e) {
-  const label = e.target.id;
-  const checked = e.target.checked;
-
-  const cards = $('.issue-card');
-  cards.each((index, card) => {
-    const cardLabels = $(card).find('.issue-card-label');
-    if (cardLabels.length && cardLabels[0].innerText === label) {
       if (checked) {
         $(card).hide();
       } else {
