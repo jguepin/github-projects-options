@@ -48,7 +48,8 @@ function updateAssigneesList() {
 }
 
 function toggleAssigneeEvent(e) {
-  const assignee = e.target.id;
+  const parent = $(e.target).parents('a.select-menu-item');
+  const assignee = parent.length ? parent.attr('id') : $(e.target).attr('id');
   const cards = $('.issue-card');
   const index = selectedAssignees.indexOf(assignee);
 
