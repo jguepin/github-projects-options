@@ -1,4 +1,5 @@
 let selectedAssignees = [];
+let selectedLabels = [];
 
 function addHeaderOptionsIcon() {
   const headerButtons = $('div.project-header > div.d-table.mt-1.float-right.f6');
@@ -16,6 +17,7 @@ function addProjectsOptionsPane() {
 function addButtonsEventListeners() {
   $('button.gh-projects-options-toggle').on('click', toggleProjectOptionsPane);
   $('#gh-projects-options-assignees-button').on('click', updateAssigneesList);
+  $('#gh-projects-options-labels-button').on('click', updateLabelsList);
   $('#gh-projects-options-add-column-toggle').on('click', toggleAddColumnEvent);
   $('#gh-projects-options-project-details-toggle').on('click', toggleProjectDetailsEvent);
   $('#gh-projects-options-project-settings-toggle').on('click', toggleProjectSettingsEvent);
@@ -78,6 +80,52 @@ function toggleAssigneeEvent(e) {
   e.stopPropagation();
 }
 
+function addLabelsFilter() {
+  const headerButtons = $('div.project-header > div.d-table.mt-1.float-right.f6');
+
+  headerButtons.prepend(Handlebars.templates['labels-filter']());
+}
+
+function updateLabelsList() {
+  const labelsList = $('#gh-projects-options-labels-list');
+  const labels = getLabelsList();
+  const template = Handlebars.templates['labels-list'];
+
+  labelsList.html(template({ labels }));
+  $('.gh-projects-options-labels-toggle').on('click', toggleLabelEvent);
+}
+
+function toggleLabelEvent(e) {
+  const parent = $(e.target).parents('a.select-menu-item');
+  const label = parent.length ? parent.attr('id') : $(e.target).attr('id');
+  const cards = $('.issue-card');
+  const index = selectedLabels.indexOf(label);
+
+  if (index === -1) {
+    selectedLabels.push(label);
+  } else {
+    selectedLabels.splice(index, 1);
+  }
+
+  cards.each((index, card) => {
+    if (!selectedLabels.length) {
+      $(card).show();
+    } else {
+      const cardLabels = $(card).find('.issue-card-label');
+      let firstLabel = cardLabels.length ? cardLabels[0].innerText : '#unlabeled';
+
+      if (selectedLabels.includes(firstLabel)) {
+        $(card).show();
+      } else {
+        $(card).hide();
+      }
+    }
+  });
+
+  updateLabelsList();
+  e.stopPropagation();
+}
+
 function getRepositoriesList() {
   const repositories = new Set();
   const cardsDesc = $('.issue-card').find('small');
@@ -118,6 +166,33 @@ function getAssigneesList() {
   };
 
   return Object.keys(assignees).map(x => assignees[x]).sort((a, b) => a.username.toLowerCase() > b.username.toLowerCase());
+}
+
+function getLabelsList() {
+  const labels = [];
+  const labelEls = $('.project-columns .issue-card-label');
+
+  labelEls.each((index, label) => {
+    const name = label.innerText;
+    const style = label.style.cssText;
+    const isSelected = selectedLabels.includes(name);
+
+    if (labels[name]) {
+      labels[name].count += 1;
+    } else {
+      labels[name] = { name, style, isSelected, count: 1 };
+    }
+  });
+
+  // Add the fake label "empty"
+  const unlabeledName = '#unlabeled';
+  labels[unlabeledName] = {
+    name: unlabeledName,
+    isSelected: selectedLabels.includes(unlabeledName),
+    isUnlabeled: true
+  };
+
+  return Object.keys(labels).map(x => labels[x]).sort((a, b) => a.name.toLowerCase() > b.name.toLowerCase());
 }
 
 function openPane() {
@@ -182,6 +257,7 @@ function toggleProjectSettingsEvent(e) {
 $(document).ready(() => {
   addHeaderOptionsIcon();
   addAssigneesFilter();
+  addLabelsFilter();
   addProjectsOptionsPane();
   addButtonsEventListeners();
 });
