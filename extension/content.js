@@ -1,4 +1,5 @@
 let selectedAssignees = [];
+let selectedLabels = [];
 
 function addHeaderOptionsIcon() {
   const headerButtons = $('div.project-header > div.d-table.mt-1.float-right.f6');
@@ -16,6 +17,7 @@ function addProjectsOptionsPane() {
 function addButtonsEventListeners() {
   $('button.gh-projects-options-toggle').on('click', toggleProjectOptionsPane);
   $('#gh-projects-options-assignees-button').on('click', updateAssigneesList);
+  $('#gh-projects-options-labels-button').on('click', updateLabelsList);
   $('#gh-projects-options-add-column-toggle').on('click', toggleAddColumnEvent);
   $('#gh-projects-options-project-details-toggle').on('click', toggleProjectDetailsEvent);
   $('#gh-projects-options-project-settings-toggle').on('click', toggleProjectSettingsEvent);
@@ -48,7 +50,8 @@ function updateAssigneesList() {
 }
 
 function toggleAssigneeEvent(e) {
-  const assignee = e.target.id;
+  const parent = $(e.target).parents('a.select-menu-item');
+  const assignee = parent.length ? parent.attr('id') : $(e.target).attr('id');
   const cards = $('.issue-card');
   const index = selectedAssignees.indexOf(assignee);
 
@@ -63,7 +66,6 @@ function toggleAssigneeEvent(e) {
       $(card).show();
     } else {
       const cardAssignees = $(card).find('img.avatar');
-      // FIXME: support multiple assignees
       let firstAssignee = cardAssignees.length ? cardAssignees[0].alt.replace('@', '') : '#nobody';
 
       if (selectedAssignees.includes(firstAssignee)) {
@@ -75,6 +77,52 @@ function toggleAssigneeEvent(e) {
   });
 
   updateAssigneesList();
+  e.stopPropagation();
+}
+
+function addLabelsFilter() {
+  const headerButtons = $('div.project-header > div.d-table.mt-1.float-right.f6');
+
+  headerButtons.prepend(Handlebars.templates['labels-filter']());
+}
+
+function updateLabelsList() {
+  const labelsList = $('#gh-projects-options-labels-list');
+  const labels = getLabelsList();
+  const template = Handlebars.templates['labels-list'];
+
+  labelsList.html(template({ labels }));
+  $('.gh-projects-options-labels-toggle').on('click', toggleLabelEvent);
+}
+
+function toggleLabelEvent(e) {
+  const parent = $(e.target).parents('a.select-menu-item');
+  const label = parent.length ? parent.attr('id') : $(e.target).attr('id');
+  const cards = $('.issue-card');
+  const index = selectedLabels.indexOf(label);
+
+  if (index === -1) {
+    selectedLabels.push(label);
+  } else {
+    selectedLabels.splice(index, 1);
+  }
+
+  cards.each((index, card) => {
+    if (!selectedLabels.length) {
+      $(card).show();
+    } else {
+      const cardLabels = $(card).find('.issue-card-label');
+      let firstLabel = cardLabels.length ? cardLabels[0].innerText : '#unlabeled';
+
+      if (selectedLabels.includes(firstLabel)) {
+        $(card).show();
+      } else {
+        $(card).hide();
+      }
+    }
+  });
+
+  updateLabelsList();
   e.stopPropagation();
 }
 
@@ -91,16 +139,6 @@ function getRepositoriesList() {
   });
 
   return repositories;
-}
-
-function getLabelsList() {
-  const labels = {};
-  const labelEls = $('.issue-card-label');
-  labelEls.each((index, label) => {
-    labels[label.innerText] = label.style.cssText;
-  });
-
-  return labels;
 }
 
 function getAssigneesList() {
@@ -130,18 +168,39 @@ function getAssigneesList() {
   return Object.keys(assignees).map(x => assignees[x]).sort((a, b) => a.username.toLowerCase() > b.username.toLowerCase());
 }
 
+function getLabelsList() {
+  const labels = [];
+  const labelEls = $('.project-columns .issue-card-label');
+
+  labelEls.each((index, label) => {
+    const name = label.innerText;
+    const style = label.style.cssText;
+    const isSelected = selectedLabels.includes(name);
+
+    if (labels[name]) {
+      labels[name].count += 1;
+    } else {
+      labels[name] = { name, style, isSelected, count: 1 };
+    }
+  });
+
+  // Add the fake label "empty"
+  const unlabeledName = '#unlabeled';
+  labels[unlabeledName] = {
+    name: unlabeledName,
+    isSelected: selectedLabels.includes(unlabeledName),
+    isUnlabeled: true
+  };
+
+  return Object.keys(labels).map(x => labels[x]).sort((a, b) => a.name.toLowerCase() > b.name.toLowerCase());
+}
+
 function openPane() {
   // Hide repositories
   const repositories = Array.from(getRepositoriesList());
 
   $('#gh-projects-options-repolist').html(Handlebars.templates['repositories-checkboxes']({ repositories }));
   $('.gh-projects-options-toggle-repo').on('click', toggleRepositoryEvent);
-
-  // Hide labels
-  const labels = getLabelsList();
-
-  $('#gh-projects-options-labelist').html(Handlebars.templates['labels-checkboxes']({ labels }));
-  $('.gh-projects-options-toggle-label').on('click', toggleLabelEvent);
 }
 
 function toggleRepositoryEvent(e) {
@@ -153,23 +212,6 @@ function toggleRepositoryEvent(e) {
   cards.each((index, card) => {
     const cardDesc = $(card).find('small')[0];
     if (cardDesc.innerText.match(repoPattern)) {
-      if (checked) {
-        $(card).hide();
-      } else {
-        $(card).show();
-      }
-    }
-  });
-}
-
-function toggleLabelEvent(e) {
-  const label = e.target.id;
-  const checked = e.target.checked;
-
-  const cards = $('.issue-card');
-  cards.each((index, card) => {
-    const cardLabels = $(card).find('.issue-card-label');
-    if (cardLabels.length && cardLabels[0].innerText === label) {
       if (checked) {
         $(card).hide();
       } else {
@@ -215,6 +257,7 @@ function toggleProjectSettingsEvent(e) {
 $(document).ready(() => {
   addHeaderOptionsIcon();
   addAssigneesFilter();
+  addLabelsFilter();
   addProjectsOptionsPane();
   addButtonsEventListeners();
 });
