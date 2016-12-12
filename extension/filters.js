@@ -2,13 +2,13 @@ window.ghOptionsFilters = (() => {
   const filters = {
     assignees: {
       selector: 'img.avatar',
-      name: e => e.alt.substring(1).replace('@', ''),
-      prop: e => e.src
+      name: assignee => assignee.alt.substring(1).replace('@', ''),
+      prop: assignee => assignee.src
     },
     labels: {
       selector: '.issue-card-label',
-      name: e => e.innerText,
-      prop: e => e.style.cssText,
+      name: label => label.innerText,
+      prop: label => label.style.cssText,
     }
   };
 
