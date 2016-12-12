@@ -16,6 +16,7 @@
         "vendor/jquery-3.1.1.slim.min.js",
         "vendor/handlebars.runtime.min-4.0.5.js",
         "templates.js",
+        "filters.js",
         "content.js"
       ]
     }
