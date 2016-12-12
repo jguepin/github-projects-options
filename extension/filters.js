@@ -1,7 +1,4 @@
 window.ghOptionsFilters = (() => {
-  let selectedAssignees = [];
-  let selectedLabels = [];
-
   const filters = {
     assignees: {
       selector: 'img.avatar',
@@ -66,7 +63,7 @@ window.ghOptionsFilters = (() => {
       name: emptyElement,
       isSelected: selected[type].includes(emptyElement),
       isEmptyElement: true
-    }
+    };
 
     return Object.keys(elements).map(x => elements[x]).sort((a, b) => a.name.toLowerCase() > b.name.toLowerCase());
   };
