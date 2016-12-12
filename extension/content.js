@@ -1,3 +1,5 @@
+/* globals ghOptionsFilters */
+
 function addHeaderOptionsIcon() {
   const headerButtons = $('div.project-header > div.d-table.mt-1.float-right.f6');
   headerButtons.prepend(Handlebars.templates['header-options-icon']());

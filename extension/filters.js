@@ -40,21 +40,22 @@ window.ghOptionsFilters = (() => {
     $(`.gh-projects-options-${type}-toggle`).on('click', { type }, toggle);
   };
 
-  const getList = type => {
-    const elements = {};
+  const getList = (type) => {
     const $elements = $(`.project-columns ${filters[type].selector}`);
 
-    $elements.each((index, element) => {
+    const elements = $elements.reduce((acc, element) => {
       const name = filters[type].name(element);
       const prop = filters[type].prop(element);
       const isSelected = selected[type].includes(name);
 
-      if (elements[name]) {
-        elements[name].count += 1;
+      if (acc[name]) {
+        acc[name].count += 1;
       } else {
-        elements[name] = { name, prop, isSelected, count: 1 };
+        acc[name] = { name, prop, isSelected, count: 1 };
       }
-    });
+
+      return acc;
+    }, {});
 
     // Add the fake "empty" element
     const emptyElement = '#empty';
@@ -68,7 +69,7 @@ window.ghOptionsFilters = (() => {
     return Object.keys(elements).map(x => elements[x]).sort((a, b) => a.name.toLowerCase() > b.name.toLowerCase());
   };
 
-  const toggle = event => {
+  const toggle = (event) => {
     const type = event.data.type;
     const $target = $(event.target);
     const $parent = $target.parents('a.select-menu-item');
@@ -113,4 +114,3 @@ window.ghOptionsFilters = (() => {
     setup
   };
 })();
-
