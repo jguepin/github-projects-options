@@ -1,6 +1,6 @@
 {
   "name": "GitHub Projects Options",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Add options to GitHub Projects",
   "manifest_version": 2,
   "permissions": [
