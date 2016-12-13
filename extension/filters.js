@@ -83,27 +83,27 @@ window.ghOptionsFilters = (() => {
       selected[type].splice(index, 1);
     }
 
-    $cards.each((index, card) => {
-      const $card = $(card);
-
-      if (!selected[type].length) {
-        $card.show();
-      } else {
-        const $selector = $(card).find(filters[type].selector);
-
-        // TODO: handle multiple assignees, authors, labels…
-        let firstElement = $selector.length ? filters[type].name($selector[0]) : '#empty';
-
-        if (selected[type].includes(firstElement)) {
-          $card.show();
-        } else {
-          $card.hide();
-        }
-      }
-    });
+    $cards.each((index, card) => $(card).toggle(shouldShowCard(card)));
 
     updateList(null, type);
     event.stopPropagation();
+  };
+
+  const shouldShowCard = (card) => {
+    // A card is shown if it matches all the selected filters
+    return Object.keys(selected).reduce((shouldShow, type) => {
+      // If no filter is selected, it should be shown
+      if (!selected[type].length) {
+        return shouldShow && true;
+      }
+      
+      const $selector = $(card).find(filters[type].selector);
+
+      // TODO: handle multiple assignees, authors, labels…
+      let firstElement = $selector.length ? filters[type].name($selector[0]) : '#empty';
+
+      return shouldShow && selected[type].includes(firstElement);
+    }, true);
   };
 
   const setup = () => {
