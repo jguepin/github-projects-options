@@ -96,13 +96,16 @@ window.ghOptionsFilters = (() => {
       if (!selected[type].length) {
         return shouldShow && true;
       }
-      
+
       const $selector = $(card).find(filters[type].selector);
+      let cardNames = [];
+      if (!$selector.length) {
+        cardNames.push('#empty');
+      } else {
+        $selector.each((index, el) => cardNames.push(filters[type].name(el)));
+      }
 
-      // TODO: handle multiple assignees, authors, labels…
-      let firstElement = $selector.length ? filters[type].name($selector[0]) : '#empty';
-
-      return shouldShow && selected[type].includes(firstElement);
+      return shouldShow && !!selected[type].find(selectedName => cardNames.includes(selectedName));
     }, true);
   };
 
