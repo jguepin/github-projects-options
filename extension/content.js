@@ -1,4 +1,4 @@
-/* globals ghOptionsFilters */
+/* globals ghOptionsFilters, ghOptionsModal */
 
 function addHeaderOptionsIcon() {
   const headerButtons = $('div.project-header > div.d-table.mt-1.float-right.f6');
@@ -110,4 +110,5 @@ $(document).ready(() => {
   addProjectsOptionsPane();
   addButtonsEventListeners();
   ghOptionsFilters.setup();
+  ghOptionsModal.setup();
 });
