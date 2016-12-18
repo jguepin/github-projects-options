@@ -20,17 +20,18 @@
   display: inline-block;
   vertical-align: middle;
   background: #fff;
+  min-width: 100px;
+  max-width: 1040px;
   margin: 0 auto;
-  width: 1040px;
-  word-wrap: break-word;
-  text-align: initial;
+  padding-bottom: 10px;
   box-shadow: 0 3px 12px rgba(0,0,0,0.15);
-  padding: 30px 0;
+  text-align: initial;
+  word-wrap: break-word;
 }
 
 #gh-projects-options-modal > img {
   display: block;
-  margin: 0 auto;
+  margin: 20px auto 10px auto;
 }
 
 #gh-projects-options-modal .header {
