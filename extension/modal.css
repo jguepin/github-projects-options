@@ -1,0 +1,38 @@
+#gh-projects-options-modal-overlay {
+  display: none;
+  background: rgba(0, 0, 0, .2);
+  position: fixed;
+  z-index: 100;
+  height: 100vh;
+  width: 100vw;
+  overflow: auto;
+  text-align: center;
+}
+
+#gh-projects-options-modal-overlay:before {
+  content: '';
+  display: inline-block;
+  vertical-align: middle;
+  height: 100%;
+}
+
+#gh-projects-options-modal {
+  display: inline-block;
+  vertical-align: middle;
+  background: #fff;
+  margin: 0 auto;
+  width: 1040px;
+  word-wrap: break-word;
+  text-align: initial;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.15);
+  padding: 30px 0;
+}
+
+#gh-projects-options-modal > img {
+  display: block;
+  margin: 0 auto;
+}
+
+#gh-projects-options-modal .header {
+  display: none;
+}
