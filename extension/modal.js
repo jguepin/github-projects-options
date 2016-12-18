@@ -37,6 +37,12 @@ window.ghOptionsModal = (() => {
       }
     });
 
+    $(document).on('keyup', (event) => {
+      if (event.keyCode === 27) {
+        $overlay.hide();
+      }
+    });
+
     ghOptionsObserver.observe('issue-card', bind);
   };
 
