@@ -16,6 +16,8 @@
         "vendor/zepto.min.js",
         "vendor/handlebars.runtime.min-4.0.5.js",
         "templates.js",
+        "observer.js",
+        "modal.js",
         "filters.js",
         "content.js"
       ]
