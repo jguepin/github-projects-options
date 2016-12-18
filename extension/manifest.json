@@ -12,6 +12,9 @@
       "matches": [
         "https://github.com/*"
       ],
+      "css": [
+        "modal.css"
+      ],
       "js": [
         "vendor/zepto.min.js",
         "vendor/handlebars.runtime.min-4.0.5.js",
