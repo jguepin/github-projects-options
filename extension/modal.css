@@ -1,6 +1,6 @@
 #gh-projects-options-modal-overlay {
   display: none;
-  background: rgba(0, 0, 0, .2);
+  background: rgba(0, 0, 0, .5);
   position: fixed;
   z-index: 100;
   height: 100vh;
@@ -19,21 +19,35 @@
 #gh-projects-options-modal {
   display: inline-block;
   vertical-align: middle;
-  background: #fff;
+  background: linear-gradient(to bottom, #fafafa 0, #fff 20px);
   min-width: 100px;
   max-width: 1040px;
   margin: 0 auto;
-  padding-bottom: 10px;
-  box-shadow: 0 3px 12px rgba(0,0,0,0.15);
+  padding: 10px 0;
   text-align: initial;
   word-wrap: break-word;
+  background-clip: padding-box;
+  border: 1px solid rgba(0,0,0,0.25);
+  border-radius: 5px;
+  box-shadow: 0 0 18px rgba(0,0,0,0.4);
+}
+
+#gh-projects-options-modal > div {
+  width: 1038px;
 }
 
 #gh-projects-options-modal > img {
   display: block;
-  margin: 20px auto 10px auto;
+  margin: 10px auto;
 }
 
 #gh-projects-options-modal .header {
   display: none;
+}
+
+@media (max-width: 1040px) {
+  #gh-projects-options-modal-overlay:before {
+    content: initial;
+    height: initial;
+  }
 }
