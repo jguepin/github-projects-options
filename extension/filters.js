@@ -1,20 +1,35 @@
 window.ghOptionsFilters = (() => {
   const filters = {
     assignees: {
-      selector: 'img.avatar',
-      name: assignee => assignee.alt.substring(1).replace('@', ''),
-      prop: assignee => assignee.src
+      elementSelector: '.issue-card',
+      nameSelector: 'img.avatar',
+      nameTransform: assignee => assignee.alt.substring(1).replace('@', ''),
+      prop: assignee => assignee.src,
+      sort: true,
+      emptyElement: true
     },
     labels: {
-      selector: '.issue-card-label',
-      name: label => label.innerText,
+      elementSelector: '.issue-card',
+      nameSelector: '.issue-card-label',
+      nameTransform: label => label.innerText,
       prop: label => label.style.cssText,
+      sort: true,
+      emptyElement: true
+    },
+    columns: {
+      elementSelector: '.project-column',
+      nameSelector: '.js-project-column-name',
+      nameTransform: label => label.innerText,
+      toggleClass: 'd-flex',
+      sort: false,
+      emptyElement: false
     }
   };
 
   const selected = {
     assignees: [],
-    labels: []
+    labels: [],
+    columns: []
   };
 
   const addButtons = () => {
@@ -41,11 +56,11 @@ window.ghOptionsFilters = (() => {
   };
 
   const getList = (type) => {
-    const $elements = $(`.project-columns ${filters[type].selector}`);
+    const $elements = $(`.project-columns ${filters[type].nameSelector}`);
 
     const elements = $elements.reduce((acc, element) => {
-      const name = filters[type].name(element);
-      const prop = filters[type].prop(element);
+      const name = filters[type].nameTransform(element);
+      const prop = filters[type].prop ? filters[type].prop(element) : null;
       const isSelected = selected[type].includes(name);
 
       if (acc[name]) {
@@ -57,23 +72,28 @@ window.ghOptionsFilters = (() => {
       return acc;
     }, {});
 
-    // Add the fake "empty" element
-    const emptyElement = '#empty';
+    if (filters[type].emptyElement) {
+      // Add the fake "empty" element
+      const emptyElement = '#empty';
 
-    elements[emptyElement] = {
-      name: emptyElement,
-      isSelected: selected[type].includes(emptyElement),
-      isEmptyElement: true
-    };
+      elements[emptyElement] = {
+        name: emptyElement,
+        isSelected: selected[type].includes(emptyElement),
+        isEmptyElement: true
+      };
+    }
 
-    return Object.keys(elements).map(x => elements[x]).sort((a, b) => a.name.toLowerCase() > b.name.toLowerCase());
+    let elementsList = Object.values(elements);
+    if (filters[type].sort) {
+      elementsList.sort((a, b) => a.name.toLowerCase() > b.name.toLowerCase());
+    }
+    return elementsList;
   };
 
   const toggle = (event) => {
     const type = event.data.type;
     const $target = $(event.target);
     const $parent = $target.parents('a.select-menu-item');
-    const $cards = $('.issue-card');
     const element = $parent.length ? $parent.attr('id') : $target.attr('id');
     const index = selected[type].indexOf(element);
 
@@ -83,37 +103,62 @@ window.ghOptionsFilters = (() => {
       selected[type].splice(index, 1);
     }
 
-    $cards.each((index, card) => $(card).toggle(shouldShowCard(card)));
+    const $filteredElements = $(filters[type].elementSelector);
+    if (filters[type].elementSelector === '.issue-card') {
+      $filteredElements.each((index, card) => filterCard(card));
+    } else {
+      $filteredElements.each((index, el) => filterElement(el, type));
+    }
 
     updateList(null, type);
     event.stopPropagation();
   };
 
-  const shouldShowCard = (card) => {
+  const filterCard = (card) => {
     // A card is shown if it matches all the selected filters
-    return Object.keys(selected).reduce((shouldShow, type) => {
+    const shouldShow = Object.keys(selected).reduce((shouldShow, type) => {
+      // If type is not about cards, ignore
+      if (filters[type].elementSelector !== '.issue-card') {
+        return shouldShow;
+      }
       // If no filter is selected, it should be shown
       if (!selected[type].length) {
         return shouldShow && true;
       }
 
-      const $selector = $(card).find(filters[type].selector);
+      const $selector = $(card).find(filters[type].nameSelector);
       let cardNames = [];
       if (!$selector.length) {
         cardNames.push('#empty');
       } else {
-        $selector.each((index, el) => cardNames.push(filters[type].name(el)));
+        $selector.each((index, el) => cardNames.push(filters[type].nameTransform(el)));
       }
 
       return shouldShow && !!selected[type].find(selectedName => cardNames.includes(selectedName));
     }, true);
+
+    $(card).toggle(shouldShow);
   };
 
-  const setup = () => {
-    addButtons();
+  const filterElement = (element, type) => {
+    let filter = filters[type];
+    let shouldShow;
+    if (!selected[type].length) {
+      shouldShow = true;
+    } else {
+      const elementNameSelector = $(element).find(filter.nameSelector)[0];
+      const elementName = filter.nameTransform(elementNameSelector);
+
+      shouldShow = selected[type].includes(elementName);
+    }
+
+    $(element).toggle(shouldShow);
+    if (filter.toggleClass) {
+      $(element).toggleClass(filter.toggleClass, shouldShow);
+    }
   };
 
   return {
-    setup
+    setup: addButtons
   };
 })();
