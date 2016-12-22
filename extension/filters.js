@@ -16,6 +16,21 @@ window.ghOptionsFilters = (() => {
       sort: true,
       emptyElement: true
     },
+    repositories: {
+      elementSelector: '.issue-card',
+      nameSelector: 'small',
+      nameTransform: (el) => {
+        const cardText = el.innerText.trim();
+        const matchRepo = cardText.match(/.*\/(.*)#\d+ .*/);
+        if (matchRepo && matchRepo.length > 1) {
+          return matchRepo[1];
+        }
+
+        return null;
+      },
+      sort: true,
+      emptyElement: false
+    },
     columns: {
       elementSelector: '.project-column',
       nameSelector: '.js-project-column-name',
@@ -29,6 +44,7 @@ window.ghOptionsFilters = (() => {
   const selected = {
     assignees: [],
     labels: [],
+    repositories: [],
     columns: []
   };
 
@@ -60,6 +76,9 @@ window.ghOptionsFilters = (() => {
 
     const elements = $elements.reduce((acc, element) => {
       const name = filters[type].nameTransform(element);
+      if (!name) {
+        return acc;
+      }
       const prop = filters[type].prop ? filters[type].prop(element) : null;
       const isSelected = selected[type].includes(name);
 
