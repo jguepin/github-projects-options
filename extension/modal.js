@@ -44,9 +44,16 @@ window.ghOptionsModal = (() => {
     });
 
     ghOptionsObserver.observe('issue-card', bind);
+
+    $('.issue-card').forEach(bind);
+  };
+
+  const destroy = () => {
+    window.location.reload();
   };
 
   return {
-    setup
+    setup,
+    destroy
   };
 })();
