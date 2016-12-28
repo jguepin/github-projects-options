@@ -53,5 +53,4 @@ $(document).ready(() => {
   addProjectsOptionsPane();
   addButtonsEventListeners();
   ghOptionsFilters.setup();
-  ghOptionsModal.setup();
 });
