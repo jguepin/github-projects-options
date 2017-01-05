@@ -18,6 +18,7 @@ function addButtonsEventListeners() {
   $('#gh-projects-options-add-column-toggle').on('click', toggleAddColumnEvent);
   $('#gh-projects-options-project-details-toggle').on('click', toggleProjectDetailsEvent);
   $('#gh-projects-options-project-settings-toggle').on('click', toggleProjectSettingsEvent);
+  $('#gh-projects-options-project-modals-toggle').on('click', toggleProjectModalsEvent);
 }
 
 function toggleProjectOptionsPane() {
@@ -48,10 +49,19 @@ function toggleProjectSettingsEvent(e) {
   $(settingsEl).toggleClass('d-table-cell', !checked);
 }
 
+function toggleProjectModalsEvent(e) {
+  const checked = e.target.checked;
+
+  if (checked) {
+    ghOptionsModal.setup();
+  } else {
+    ghOptionsModal.destroy();
+  }
+}
+
 $(document).ready(() => {
   addHeaderOptionsIcon();
   addProjectsOptionsPane();
   addButtonsEventListeners();
   ghOptionsFilters.setup();
-  ghOptionsModal.setup();
 });
