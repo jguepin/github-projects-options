@@ -8,6 +8,26 @@ window.ghOptionsFilters = (() => {
       sort: true,
       emptyElement: true
     },
+    authors: {
+      elementSelector: '.issue-card',
+      nameSelector: '.text-gray-dark',
+      nameTransform: label => label.innerText,
+      prop: author => {
+        console.log(author);
+        return author.src;
+      },
+      toggleClass: 'd-flex',
+      sort: false,
+      emptyElement: false
+    },
+    columns: {
+      elementSelector: '.project-column',
+      nameSelector: '.js-project-column-name',
+      nameTransform: label => label.innerText,
+      toggleClass: 'd-flex',
+      sort: false,
+      emptyElement: false
+    },
     labels: {
       elementSelector: '.issue-card',
       nameSelector: '.issue-card-label',
@@ -30,14 +50,6 @@ window.ghOptionsFilters = (() => {
       },
       sort: true,
       emptyElement: false
-    },
-    columns: {
-      elementSelector: '.project-column',
-      nameSelector: '.js-project-column-name',
-      nameTransform: label => label.innerText,
-      toggleClass: 'd-flex',
-      sort: false,
-      emptyElement: false
     }
   };
 
@@ -45,7 +57,8 @@ window.ghOptionsFilters = (() => {
     assignees: [],
     labels: [],
     repositories: [],
-    columns: []
+    columns: [],
+    authors: []
   };
 
   const addButtons = () => {
