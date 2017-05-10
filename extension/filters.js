@@ -62,7 +62,7 @@ window.ghOptionsFilters = (() => {
   };
 
   const addButtons = () => {
-    const $header = $('.project-header > .d-table.mt-1.float-right.f6');
+    const $header = $('.project-header > .d-flex.flex-row.flex-items-center.f6');
 
     Object.keys(filters).forEach(type => {
       const template = Handlebars.templates[`${type}-filter`]();
